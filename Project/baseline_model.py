@@ -197,7 +197,7 @@ def f1_measure(y_true, y_pred):
     return K.mean(f1)
 
 def f1_loss(y_true, y_pred):
-    return 1 - f1(y_true, y_pred)
+    return 1 - f1_measure(y_true, y_pred)
     
 def build_model(input_shape, dropout_rate):
     
@@ -247,7 +247,7 @@ learning_rate = 1.3e-3
 model.compile(
     loss = 'binary_crossentropy',
     optimizer = Adam(learning_rate),
-    metrics = ['acc', f1_measure]
+    metrics = [f1_measure]
 )
 
 model.summary()
