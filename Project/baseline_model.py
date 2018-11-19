@@ -299,7 +299,7 @@ else:
 history.history
 
 #bestModel = load_model('./base.model', custom_objects={'f1': f1}) #, 'f1_loss': f1_loss})
-
+'''
 fig, ax = plt.subplots(1, 2, figsize=(15,5))
 ax[0].set_title('loss')
 ax[0].plot(history.epoch, history.history["loss"], label="Train loss")
@@ -309,7 +309,7 @@ ax[1].plot(history.epoch, history.history["f1_measure"], label="Train F1")
 ax[1].plot(history.epoch, history.history["val_f1_measure"], label="Validation F1")
 ax[0].legend()
 ax[1].legend()
-
+'''
 fullValGen = valid_gen
 
 lastFullValPred = np.empty((0, 28))
