@@ -275,16 +275,18 @@ valid_gen = ProteinDataGenerator(pathsVal, labelsVal, BATCH_SIZE, SHAPE, use_cac
 
 # https://keras.io/callbacks/#modelcheckpoint
 checkpoint = ModelCheckpoint('./base.model', monitor='val_loss', verbose=1, save_best_only=True, save_weights_only=False, mode='min', period=1)
+earlystopper = EarlyStopping(monitor='val_loss', patience=15, verbose=1)
+
 reduceLROnPlato = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=3, verbose=1, mode='min')
 
 # some params
-epochs = 20
+epochs = 500
 train_model = True
 save_model = True
 
 if train_model:
     history = model.fit_generator( generator = train_gen, steps_per_epoch = len(train_gen),validation_data = valid_gen, validation_steps = 8,
-        epochs = epochs, verbose = 1, callbacks = [checkpoint] )
+        epochs = epochs, verbose = 1, callbacks = [checkpoint,earlystopper] )
 
     if save_model:
         model.save('my_model2.h5')
@@ -332,7 +334,6 @@ print('Individual F1-scores for each class:')
 print(np.max(f1s, axis=0))
 print('Macro F1-score CV =', np.mean(np.max(f1s, axis=0)))
 
-plt.plot(rng, f1s)
 T = np.empty(28)
 for i in range(28):
     T[i] = rng[np.where(f1s[:,i] == np.max(f1s[:,i]))[0][0]]
