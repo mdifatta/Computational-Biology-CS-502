@@ -275,7 +275,7 @@ valid_gen = ProteinDataGenerator(pathsVal, labelsVal, BATCH_SIZE, SHAPE, use_cac
 
 # https://keras.io/callbacks/#modelcheckpoint
 checkpoint = ModelCheckpoint('./base.model', monitor='val_loss', verbose=1, save_best_only=True, save_weights_only=False, mode='min', period=1)
-earlystopper = EarlyStopping(monitor='val_loss', patience=15, verbose=1)
+earlystopper = EarlyStopping(monitor=f1_measure, patience=15, verbose=1)
 
 reduceLROnPlato = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=3, verbose=1, mode='min')
 
