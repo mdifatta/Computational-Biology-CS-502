@@ -29,6 +29,7 @@ fs = gcsfs.GCSFileSystem(project='inlaid-marker-222600')
 BATCH_SIZE = 128
 SEED = 777
 SHAPE = (192, 192, 4)
+
 DATA_DIR = 'gs://myprojectbucket2/'
 # TODO
 VAL_RATIO = 0.1
@@ -37,7 +38,7 @@ THRESHOLD = 0.05
 ia.seed(SEED)
 
 def trainDataset():
-    path_to_train = DATA_DIR + 'train/'
+    path_to_train = DATA_DIR + 'data/'
     data = pd.read_csv(DATA_DIR +'train.csv')
     
     names_with_path = []
