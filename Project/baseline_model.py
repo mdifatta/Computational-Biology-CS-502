@@ -30,7 +30,7 @@ BATCH_SIZE = 128
 SEED = 777
 SHAPE = (192, 192, 4)
 
-DATA_DIR = 'gs://myprojectbucket2/'
+DATA_DIR = ''
 # TODO
 VAL_RATIO = 0.1
 THRESHOLD = 0.05
