@@ -16,18 +16,22 @@ import keras
 import sys
 from keras.utils import Sequence
 from PIL import Image
-from matplotlib import pyplot as plt
 from tqdm import tqdm
 import cv2
 
 import imgaug as ia
 from imgaug import augmenters as iaa
+import gcsfs
+import tensorflow as tf
+sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
+
+fs = gcsfs.GCSFileSystem(project='inlaid-marker-222600')
 
 # Any results you write to the current directory are saved as output.
 BATCH_SIZE = 128
 SEED = 777
 SHAPE = (192, 192, 4)
-DATA_DIR = '../input/'
+DATA_DIR = 'gs://myprojectbucket2/'
 # TODO
 VAL_RATIO = 0.1
 THRESHOLD = 0.05
