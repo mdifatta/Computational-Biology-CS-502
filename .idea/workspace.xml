@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="daf89403-db93-4c4f-8a98-c9857d8ad984" name="Default Changelist" comment="Added sample submission config">
-      <change beforePath="$PROJECT_DIR$/.idea/Computational-Biology-CS-502.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Computational-Biology-CS-502.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/remote-mappings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/remote-mappings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="daf89403-db93-4c4f-8a98-c9857d8ad984" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/Project/baseline_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/baseline_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/telegram_bot/telegram_bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/telegram_bot.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -46,14 +42,14 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="464" />
-          <entry key="txt" value="384" />
+          <entry key="py" value="471" />
+          <entry key="txt" value="437" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="384" />
-          <entry key="Python" value="464" />
+          <entry key="PLAIN_TEXT" value="437" />
+          <entry key="Python" value="471" />
         </counts>
       </usages-collector>
     </session>
@@ -72,17 +68,14 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Project/baseline_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="287" column="40" selection-start-line="287" selection-start-column="40" selection-end-line="287" selection-end-column="40" />
-              <folding>
-                <element signature="e#232#281#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="69">
+              <caret line="3" column="44" lean-forward="true" selection-start-line="3" selection-start-column="44" selection-end-line="3" selection-end-column="44" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/telegram_bot/telegram_bot.py">
+        <entry file="file://$PROJECT_DIR$/Project/telegram_bot.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="205">
               <caret line="16" selection-start-line="16" selection-end-line="16" />
@@ -155,11 +148,6 @@
               <item name="Computational-Biology-CS-502" type="b2602c69:ProjectViewProjectNode" />
               <item name="Computational-Biology-CS-502" type="462c0819:PsiDirectoryNode" />
               <item name="Project" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Computational-Biology-CS-502" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Computational-Biology-CS-502" type="462c0819:PsiDirectoryNode" />
-              <item name="telegram_bot" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -338,7 +326,21 @@
       <option name="project" value="LOCAL" />
       <updated>1542680302532</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Added sample submission config">
+      <created>1542694885276</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1542694885277</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Added telegram bot to keep up with progress">
+      <created>1542694954458</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1542694954458</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -386,7 +388,9 @@
     <MESSAGE value="Added validation_f1 in earlystopping callback and model checkpoint" />
     <MESSAGE value="added sample submission file" />
     <MESSAGE value="Changed sample submission file" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed sample submission file" />
+    <MESSAGE value="Added sample submission config" />
+    <MESSAGE value="Added telegram bot to keep up with progress" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added telegram bot to keep up with progress" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Project/CompBio_Project.ipynb">
@@ -396,7 +400,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/telegram_bot/telegram_bot.py">
+    <entry file="file://$PROJECT_DIR$/Project/telegram_bot.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="205">
           <caret line="16" selection-start-line="16" selection-end-line="16" />
@@ -405,11 +409,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Project/baseline_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="287" column="40" selection-start-line="287" selection-start-column="40" selection-end-line="287" selection-end-column="40" />
-          <folding>
-            <element signature="e#232#281#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="69">
+          <caret line="3" column="44" lean-forward="true" selection-start-line="3" selection-start-column="44" selection-end-line="3" selection-end-column="44" />
         </state>
       </provider>
     </entry>
