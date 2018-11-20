@@ -3,13 +3,7 @@
   <component name="RemoteMappingsManager">
     <list>
       <list>
-        <remote-mappings server-id="python@sftp://flavio_dipalo@35.225.34.35:22/home/flavio_dipalo/anaconda3/envs/compbio_env/bin/python3">
-          <settings>
-            <list>
-              <mapping local-root="$PROJECT_DIR$" remote-root="/home/flavio_dipalo/comp_bio" />
-            </list>
-          </settings>
-        </remote-mappings>
+        <remote-mappings server-id="python@sftp://flavio_dipalo@35.225.34.35:22/home/flavio_dipalo/anaconda3/envs/compbio_env/bin/python3" />
       </list>
     </list>
   </component>

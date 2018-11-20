@@ -284,6 +284,7 @@ epochs = 1
 train_model = True
 save_model = True
 bot = TelegramBot()
+###
 if train_model:
     bot.send_message('Training started')
     history = model.fit_generator( generator = train_gen, steps_per_epoch = len(train_gen),validation_data = valid_gen, validation_steps = 8,
