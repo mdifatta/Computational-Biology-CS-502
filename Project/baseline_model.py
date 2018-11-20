@@ -343,7 +343,7 @@ print(T)
 pathsTest, labelsTest = testDataset()
 
 testg = ProteinDataGenerator(pathsTest, labelsTest, BATCH_SIZE, SHAPE)
-submit = pd.read_csv(DATA_DIR + '/sample_submission.csv')
+submit = pd.read_csv(DATA_DIR + 'sample_submission.csv')
 P = np.zeros((pathsTest.shape[0], 28))
 for i in tqdm(range(len(testg))):
     images, labels = testg[i]
