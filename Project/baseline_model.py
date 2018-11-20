@@ -276,7 +276,7 @@ earlystopper = EarlyStopping(monitor='val_f1_measure', patience=15, verbose=1,mo
 reduceLROnPlato = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=3, verbose=1, mode='min')
 
 # some params
-epochs = 1
+epochs = 500
 train_model = True
 save_model = True
 #bot = TelegramBot()
