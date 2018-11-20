@@ -1,7 +1,7 @@
 # This Python 3 environment comes with many helpful analytics libraries installed
 # It is defined by the kaggle/python docker image: https://github.com/kaggle/docker-python
 # For example, here's several helpful packages to load in 
-from telegram_bot.telegram_bot import TelegramBot
+from Project.telegram_bot import TelegramBot
 import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 
@@ -11,8 +11,6 @@ import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 import os
 import keras
 
-import sys
-from keras.utils import Sequence
 from PIL import Image
 from tqdm import tqdm
 import cv2
@@ -168,15 +166,13 @@ class ProteinDataGenerator(keras.utils.Sequence):
         im = np.divide(im, 255)
         return im
 
-from keras.preprocessing.image import ImageDataGenerator
-from keras.models import Sequential, load_model, Model
-from keras.layers import Activation, Dropout, Flatten, Dense, Input, Conv2D, MaxPooling2D, BatchNormalization, Concatenate, ReLU, LeakyReLU
-from keras.callbacks import ModelCheckpoint, LearningRateScheduler, EarlyStopping, ReduceLROnPlateau
-from keras import metrics
+
+from keras.models import Sequential, load_model
+from keras.layers import Dropout, Flatten, Dense, Conv2D, MaxPooling2D, BatchNormalization
+from keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from keras.optimizers import Adam
 from keras.callbacks import ModelCheckpoint
 from keras import backend as K
-import keras
 import tensorflow as tf
 
 from tensorflow import set_random_seed
