@@ -1,7 +1,7 @@
 # This Python 3 environment comes with many helpful analytics libraries installed
 # It is defined by the kaggle/python docker image: https://github.com/kaggle/docker-python
 # For example, here's several helpful packages to load in 
-
+from telegram_bot.telegram_bot import TelegramBot
 import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 
@@ -280,13 +280,15 @@ earlystopper = EarlyStopping(monitor='val_f1_measure', patience=15, verbose=1,mo
 reduceLROnPlato = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=3, verbose=1, mode='min')
 
 # some params
-epochs = 500
+epochs = 1
 train_model = True
 save_model = True
-
+bot = TelegramBot()
 if train_model:
+    bot.send_message('Training started')
     history = model.fit_generator( generator = train_gen, steps_per_epoch = len(train_gen),validation_data = valid_gen, validation_steps = 8,
         epochs = epochs, verbose = 1, callbacks = [checkpoint,earlystopper] )
+    bot.send_message('Training ended')
 
     if save_model:
         model.save('my_model2.h5')
@@ -366,4 +368,4 @@ for row in tqdm(range(submit.shape[0])):
     
 submit['Predicted'] = np.array(prediction)
 submit.to_csv('baseline2.csv', index=False)
-
+bot.send_message('Program terminated correctly')
