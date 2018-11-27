@@ -292,7 +292,7 @@ if train_model:
     
 else:
     print("Loading weights ...")
-    model = load_model('my_model2.h5')
+    model = load_model('my_model2.h5',custom_objects={'f1_measure': f1_measure})
     
 history.history
 
@@ -319,7 +319,8 @@ for i in tqdm(range(len(fullValGen))):
     lastFullValLabels = np.append(lastFullValLabels, lbl, axis=0)
 print(lastFullValPred.shape, lastFullValLabels.shape)
 
-from sklearn.metrics import f1_score as off1
+from sklearn.metrics import f1_score as off1, f1_score
+
 rng = np.arange(0, 1, 0.001)
 f1s = np.zeros((rng.shape[0], 28))
 for j,t in enumerate(tqdm(rng)):
@@ -339,7 +340,6 @@ print('Probability threshold maximizing CV F1-score for each class:')
 print(T)
 
 pathsTest, labelsTest = testDataset()
-
 testg = ProteinDataGenerator(pathsTest, labelsTest, BATCH_SIZE, SHAPE)
 submit = pd.read_csv(DATA_DIR + 'sample_submission.csv')
 P = np.zeros((pathsTest.shape[0], 28))
