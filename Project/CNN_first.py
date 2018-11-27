@@ -294,7 +294,7 @@ else:
     print("Loading weights ...")
     model = load_model('my_model2.h5',custom_objects={'f1_measure': f1_measure})
     
-history.history
+#history.history
 
 #bestModel = load_model('./base.model', custom_objects={'f1': f1}) #, 'f1_loss': f1_loss})
 '''
