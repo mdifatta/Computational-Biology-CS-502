@@ -20,7 +20,7 @@ from imgaug import augmenters as iaa
 import gcsfs
 import tensorflow as tf
 
-from Project.class_weights_calculations import get_class_weights
+from class_weights_calculations import get_class_weights
 
 sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
 
