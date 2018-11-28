@@ -19,6 +19,9 @@ import imgaug as ia
 from imgaug import augmenters as iaa
 import gcsfs
 import tensorflow as tf
+
+from Project.class_weights_calculations import get_class_weights
+
 sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
 
 fs = gcsfs.GCSFileSystem(project='inlaid-marker-222600')
@@ -282,8 +285,9 @@ save_model = True
 ###
 if train_model:
     #bot.send_message('Training started')
+    class_weigths = get_class_weights()
     history = model.fit_generator( generator = train_gen, steps_per_epoch = len(train_gen),validation_data = valid_gen, validation_steps = 8,
-        epochs = epochs, verbose = 1, callbacks = [checkpoint,earlystopper] )
+        epochs = epochs, verbose = 1, callbacks = [checkpoint,earlystopper], class_weight=get_class_weights())
     #bot.send_message('Training ended')
 
     if save_model:
