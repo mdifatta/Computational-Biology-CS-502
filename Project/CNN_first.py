@@ -4,7 +4,7 @@
 #from telegram_bot.telegram_bot import TelegramBot
 import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
-
+import time
 # Input data files are available in the "../input/" directory.
 # For example, running this (by clicking run or pressing Shift+Enter) will list the files in the input directory
 
@@ -284,6 +284,7 @@ save_model = True
 #bot = TelegramBot()
 ###
 if train_model:
+
     #bot.send_message('Training started')
     class_weigths = get_class_weights()
     history = model.fit_generator( generator = train_gen, steps_per_epoch = len(train_gen),validation_data = valid_gen, validation_steps = 8,
@@ -291,7 +292,8 @@ if train_model:
     #bot.send_message('Training ended')
 
     if save_model:
-        model.save('my_model2.h5')
+        ts = int(time.time())
+        model.save('my_model'+str(ts)+'.h5')
         print("Model's weights saved!")
     
 else:
@@ -347,9 +349,11 @@ pathsTest, labelsTest = testDataset()
 testg = ProteinDataGenerator(pathsTest, labelsTest, BATCH_SIZE, SHAPE)
 submit = pd.read_csv(DATA_DIR + 'sample_submission.csv')
 P = np.zeros((pathsTest.shape[0], 28))
+
 for i in tqdm(range(len(testg))):
     images, labels = testg[i]
     score = model.predict(images)
+    print(score)
     P[i*BATCH_SIZE:i*BATCH_SIZE+score.shape[0]] = score
     
 PP = np.array(P)
@@ -367,5 +371,6 @@ for row in tqdm(range(submit.shape[0])):
     prediction.append(str_label.strip())
     
 submit['Predicted'] = np.array(prediction)
-submit.to_csv('baseline2.csv', index=False)
+ts = str(int(time.time()))
+submit.to_csv('model'+ts+'.csv', index=False)
 #bot.send_message('Program terminated correctly')
