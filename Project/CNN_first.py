@@ -279,7 +279,7 @@ reduceLROnPlato = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=3, 
 
 # some params
 epochs = 500
-train_model = True
+train_model = False
 save_model = True
 #bot = TelegramBot()
 ###
