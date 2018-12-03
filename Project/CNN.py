@@ -12,6 +12,7 @@ import os
 import keras
 
 from PIL import Image
+from keras.applications import InceptionResNetV2
 from tqdm import tqdm
 import cv2
 
@@ -170,11 +171,12 @@ class ProteinDataGenerator(keras.utils.Sequence):
 
 
 from keras.models import Sequential, load_model
-from keras.layers import Dropout, Flatten, Dense, Conv2D, MaxPooling2D, BatchNormalization
+from keras.layers import Dropout, Flatten, Dense, Conv2D, MaxPooling2D, BatchNormalization, GlobalAveragePooling2D, \
+    Activation
 from keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from keras.optimizers import Adam
 from keras.callbacks import ModelCheckpoint
-from keras import backend as K
+from keras import backend as K, Input, Model
 import tensorflow as tf
 
 from tensorflow import set_random_seed
@@ -196,11 +198,35 @@ def f1_measure(y_true, y_pred):
 
 def f1_loss(y_true, y_pred):
     return 1 - f1_measure(y_true, y_pred)
-    
-def build_model(input_shape, dropout_rate):
-    
+
+
+#TODO: try pre trained resnet
+def pre_trained_resnet(input_shape, n_out):
+    inp = Input(input_shape)
+    pretrain_model = InceptionResNetV2(include_top=False, weights=None, input_tensor=inp)
+    x = pretrain_model.output
+    x = GlobalAveragePooling2D()(x)
+    # x = Flatten()(x)
+    x = Activation('relu')(x)
+    x = Dropout(0.5)(x)
+    x = Dense(1024)(x)
+    x = Activation('relu')(x)
+    x = Dense(n_out)(x)
+    x = Activation('sigmoid')(x)
+    for layer in pretrain_model.layers:
+        layer.trainable = True
+    return Model(inp, x)
+
+def edge_detection_model(input_shape, dropout_rate):
+    from keras import backend as K
+
+    def my_init(shape, dtype=None):
+        print(shape)
+        np.array([[-3,0,3],[-10,0,+10],[-3,0,+3]])
+
+        return K.random_normal(shape, dtype=dtype)
     model = Sequential()
-    model.add(Conv2D(8, (3, 3), activation='relu', input_shape = input_shape))
+    model.add(Conv2D(8, (3, 3), activation='relu', input_shape= input_shape,kernel_initializer=my_init,trainable=False))
     model.add(BatchNormalization(axis=-1))
     model.add(Conv2D(8, (3, 3), activation='relu'))
     model.add(BatchNormalization(axis=-1))
@@ -235,11 +261,56 @@ def build_model(input_shape, dropout_rate):
     model.add(BatchNormalization(axis=-1))
     model.add(Dropout(dropout_rate))
     model.add(Dense(28, activation='sigmoid'))
-    
+    return model
+
+
+
+
+
+
+    pass
+
+def build_model(input_shape, dropout_rate):
+    model = Sequential()
+    model.add(Conv2D(8, (3, 3), activation='relu', input_shape= input_shape))
+    model.add(BatchNormalization(axis=-1))
+    model.add(Conv2D(8, (3, 3), activation='relu'))
+    model.add(BatchNormalization(axis=-1))
+    model.add(Conv2D(16, (3, 3), activation='relu'))
+    model.add(BatchNormalization(axis=-1))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(dropout_rate))
+    #c1 = Conv2D(16, (3, 3), padding='same')(x)
+    #c1 = ReLU()(c1)
+    #c2 = Conv2D(16, (5, 5), padding='same')(x)
+    #c2 = ReLU()(c2)
+    #c3 = Conv2D(16, (7, 7), padding='same')(x)
+    #c3 = ReLU()(c3)
+    #c4 = Conv2D(16, (1, 1), padding='same')(x)
+    #c4 = ReLU()(c4)
+    #x = Concatenate()([c1, c2, c3, c4])
+    model.add(Conv2D(16, (5, 5), activation='relu'))
+    model.add(BatchNormalization(axis=-1))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(dropout_rate))
+    model.add(Conv2D(32, (3, 3), activation='relu'))
+    model.add(BatchNormalization(axis=-1))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(dropout_rate))
+    model.add(Conv2D(64, (3, 3), activation='relu'))
+    model.add(BatchNormalization(axis=-1))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(dropout_rate))
+    model.add(Flatten())
+    model.add(Dropout(dropout_rate))
+    model.add(Dense(100, activation='relu'))
+    model.add(BatchNormalization(axis=-1))
+    model.add(Dropout(dropout_rate))
+    model.add(Dense(28, activation='sigmoid'))
     return model
     
-model = build_model(SHAPE, dropout_rate=0.2)
-
+#model = build_model(SHAPE, dropout_rate=0.2)
+model = edge_detection_model(SHAPE, dropout_rate=0.2)
 learning_rate = 1.3e-3
 
 model.compile(
@@ -274,12 +345,11 @@ valid_gen = ProteinDataGenerator(pathsVal, labelsVal, BATCH_SIZE, SHAPE, use_cac
 # https://keras.io/callbacks/#modelcheckpoint
 checkpoint = ModelCheckpoint('./base.model', monitor='val_f1_measure', verbose=1, save_best_only=True, save_weights_only=False, mode='min', period=1)
 earlystopper = EarlyStopping(monitor='val_f1_measure', patience=15, verbose=1,mode='max')
-
 reduceLROnPlato = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=3, verbose=1, mode='min')
 
 # some params
 epochs = 500
-train_model = False
+train_model = True
 save_model = True
 #bot = TelegramBot()
 ###
@@ -295,82 +365,78 @@ if train_model:
         ts = int(time.time())
         model.save('my_model'+str(ts)+'.h5')
         print("Model's weights saved!")
-    
-else:
+
+
+
+# history.history
+
+# bestModel = load_model('./base.model', custom_objects={'f1': f1}) #, 'f1_loss': f1_loss})
+def evaluate():
     print("Loading weights ...")
-    model = load_model('my_model2.h5',custom_objects={'f1_measure': f1_measure})
-    
-#history.history
+    import glob
+    import os
 
-#bestModel = load_model('./base.model', custom_objects={'f1': f1}) #, 'f1_loss': f1_loss})
-'''
-fig, ax = plt.subplots(1, 2, figsize=(15,5))
-ax[0].set_title('loss')
-ax[0].plot(history.epoch, history.history["loss"], label="Train loss")
-ax[0].plot(history.epoch, history.history["val_loss"], label="Validation loss")
-ax[1].set_title('f1')
-ax[1].plot(history.epoch, history.history["f1_measure"], label="Train F1")
-ax[1].plot(history.epoch, history.history["val_f1_measure"], label="Validation F1")
-ax[0].legend()
-ax[1].legend()
-'''
-fullValGen = valid_gen
+    list_of_files = glob.glob('*.h5')  # * means all if need specific format then *.csv
+    latest_file = max(list_of_files, key=os.path.getctime)
+    model = load_model(latest_file, custom_objects={'f1_measure': f1_measure})
+    fullValGen = valid_gen
 
-lastFullValPred = np.empty((0, 28))
-lastFullValLabels = np.empty((0, 28))
-for i in tqdm(range(len(fullValGen))): 
-    im, lbl = fullValGen[i]
-    scores = model.predict(im)
-    lastFullValPred = np.append(lastFullValPred, scores, axis=0)
-    lastFullValLabels = np.append(lastFullValLabels, lbl, axis=0)
-print(lastFullValPred.shape, lastFullValLabels.shape)
+    lastFullValPred = np.empty((0, 28))
+    lastFullValLabels = np.empty((0, 28))
+    for i in tqdm(range(len(fullValGen))):
+        im, lbl = fullValGen[i]
+        scores = model.predict(im)
+        lastFullValPred = np.append(lastFullValPred, scores, axis=0)
+        lastFullValLabels = np.append(lastFullValLabels, lbl, axis=0)
+    print(lastFullValPred.shape, lastFullValLabels.shape)
 
-from sklearn.metrics import f1_score as off1, f1_score
+    from sklearn.metrics import f1_score as off1, f1_score
 
-rng = np.arange(0, 1, 0.001)
-f1s = np.zeros((rng.shape[0], 28))
-for j,t in enumerate(tqdm(rng)):
+    rng = np.arange(0, 1, 0.001)
+    f1s = np.zeros((rng.shape[0], 28))
+    for j, t in enumerate(tqdm(rng)):
+        for i in range(28):
+            p = np.array(lastFullValPred[:, i] > t, dtype=np.int8)
+            scoref1 = off1(lastFullValLabels[:, i], p, average='binary')
+            f1s[j, i] = scoref1
+
+    print('Individual F1-scores for each class:')
+    print(np.max(f1s, axis=0))
+    print('Macro F1-score CV =', np.mean(np.max(f1s, axis=0)))
+
+    T = np.empty(28)
     for i in range(28):
-        p = np.array(lastFullValPred[:,i]>t, dtype=np.int8)
-        scoref1 = off1(lastFullValLabels[:,i], p, average='binary')
-        f1s[j,i] = scoref1
-        
-print('Individual F1-scores for each class:')
-print(np.max(f1s, axis=0))
-print('Macro F1-score CV =', np.mean(np.max(f1s, axis=0)))
+        T[i] = rng[np.where(f1s[:, i] == np.max(f1s[:, i]))[0][0]]
+    print('Probability threshold maximizing CV F1-score for each class:')
+    print(T)
 
-T = np.empty(28)
-for i in range(28):
-    T[i] = rng[np.where(f1s[:,i] == np.max(f1s[:,i]))[0][0]]
-print('Probability threshold maximizing CV F1-score for each class:')
-print(T)
+    pathsTest, labelsTest = testDataset()
+    testg = ProteinDataGenerator(pathsTest, labelsTest, BATCH_SIZE, SHAPE)
+    submit = pd.read_csv(DATA_DIR + 'sample_submission.csv')
+    P = np.zeros((pathsTest.shape[0], 28))
 
-pathsTest, labelsTest = testDataset()
-testg = ProteinDataGenerator(pathsTest, labelsTest, BATCH_SIZE, SHAPE)
-submit = pd.read_csv(DATA_DIR + 'sample_submission.csv')
-P = np.zeros((pathsTest.shape[0], 28))
+    for i in tqdm(range(len(testg))):
+        images, labels = testg[i]
+        score = model.predict(images)
+        P[i * BATCH_SIZE:i * BATCH_SIZE + score.shape[0]] = score
 
-for i in tqdm(range(len(testg))):
-    images, labels = testg[i]
-    score = model.predict(images)
-    print(score)
-    P[i*BATCH_SIZE:i*BATCH_SIZE+score.shape[0]] = score
-    
-PP = np.array(P)
-prediction = []
+    PP = np.array(P)
+    prediction = []
 
-for row in tqdm(range(submit.shape[0])):
-    
-    str_label = ''
-    
-    for col in range(PP.shape[1]):
-        if(PP[row, col] < T[col]):
-            str_label += ''
-        else:
-            str_label += str(col) + ' '
-    prediction.append(str_label.strip())
-    
-submit['Predicted'] = np.array(prediction)
-ts = str(int(time.time()))
-submit.to_csv('model'+ts+'.csv', index=False)
-#bot.send_message('Program terminated correctly')
+    for row in tqdm(range(submit.shape[0])):
+
+        str_label = ''
+
+        for col in range(PP.shape[1]):
+            if (PP[row, col] < T[col]):
+                str_label += ''
+            else:
+                str_label += str(col) + ' '
+        prediction.append(str_label.strip())
+
+    submit['Predicted'] = np.array(prediction)
+    ts = str(int(time.time()))
+    submit.to_csv('model' + ts + '.csv', index=False)
+    #bot.send_message('Program terminated correctly')
+
+#evaluate()
